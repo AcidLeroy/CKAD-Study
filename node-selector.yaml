@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: nginx-gpu
+  name: nginx-gpu
+spec:
+  containers:
+  - image: nginx
+    name: nginx-gpu
+    resources: {}
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+  nodeSelector: 
+    accelrator: nvidia-tesla-p100
+status: {}
