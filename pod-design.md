@@ -511,4 +511,38 @@ Section covers how to design pods in kubernetes
 - Answers: Yes
 
 # Cron Jobs
+## Create a cron job with image busybox that runs on a sechdule of "*/1 * * * *" and writes 'date; echo Hello from the Kubernetes cluster' to standard output
+- Commands I ran: 
+    ```bash
+    kk create cronjob --image=busybox --schedule="*/1 * * * *" busybox -- /bin/sh -c "date; echo Hello from the Kubernetes cluster"
+    ```
+- Answers: 
+    ```bash
+    kubectl create cronjob busybox --image=busybox --schedule="*/1 * * * *" -- /bin/sh -c 'date; echo Hello from the Kubernetes cluster'
+    ```
+
+## See its logs and delete it
+- Commands I ran: 
+    ```bash
+    kk logs busybox-1612970820-x6mpl
+    kk delete cronjob busybox
+    ```
+- Answers: 
+    ```bash
+    kubectl get cj
+    kubectl get jobs --watch
+    kubectl get po --show-labels # observe that the pods have a label that mentions their 'parent' job
+    kubectl logs busybox-1529745840-m867r
+    # Bear in mind that Kubernetes will run a new job/pod for each new cron job
+    kubectl delete cj busybox
+    ```
+
+## Create a cron job with iamge busybox that runs every minitu and writes 'date; echo Hello from Kubernetes cluster' to standard output. the cron job should be terminiated if it takes more than 17 seconds to start after its schedule
+- Commands I ran: 
+    ```bash
+    kk create cronjob --dry-run=client -oyaml --image=busybox --schedule="*/1 * * * *" busybox -- /bin/sh -c "date; echo Hello from the Kubernetes cluster" > cronjob.yaml
+    ```
+    then edit the yaml file and add ` startingDeadlineSeconds: 16` to the spec. 
+
+- Answers: The same as above. 
 
